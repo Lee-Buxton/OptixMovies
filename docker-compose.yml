@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: src/OptixMovies.API/Dockerfile
+    depends_on: 
+      - optixmovies.cosmos
 
   optixmovies.gateway:
     image: ${DOCKER_REGISTRY-}optixmoviesgateway
@@ -13,7 +15,7 @@ services:
       dockerfile: src/OptixMovies.Gateway/Dockerfile
 
   optixmovies.cosmos:
-    container_name: optixmovies-cosmos
+    container_name: OptixMovies.Cosmos
     image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
     ports:
       - "8081:8081"
