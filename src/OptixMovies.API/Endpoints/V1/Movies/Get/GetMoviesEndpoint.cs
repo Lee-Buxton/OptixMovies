@@ -37,6 +37,7 @@ public class GetMoviesEndpoint : Endpoint<GetMoviesEndpointRequest, GetMoviesEnd
             "/Movies",
             "/Movies/{Id}");
         AllowAnonymous();
+        Version(1);
     }
 
     public override async Task HandleAsync(GetMoviesEndpointRequest req, CancellationToken ct)
