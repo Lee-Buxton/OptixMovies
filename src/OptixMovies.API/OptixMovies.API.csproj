@@ -22,8 +22,4 @@
     <Folder Include="Endpoints\V1\Movies\Post\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OptixMovies.Module.Movies\OptixMovies.Modules.Movies.csproj" />
-  </ItemGroup>
-
 </Project>
