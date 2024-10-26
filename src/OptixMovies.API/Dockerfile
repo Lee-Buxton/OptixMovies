@@ -12,10 +12,11 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["OptixMovies.API/OptixMovies.API.csproj", "OptixMovies.API/"]
-RUN dotnet restore "./OptixMovies.API/OptixMovies.API.csproj"
+COPY ["src/OptixMovies.API/OptixMovies.API.csproj", "src/OptixMovies.API/"]
+COPY ["src/OptixMovies.Module.Movies/OptixMovies.Modules.Movies.csproj", "src/OptixMovies.Module.Movies/"]
+RUN dotnet restore "./src/OptixMovies.API/OptixMovies.API.csproj"
 COPY . .
-WORKDIR "/src/OptixMovies.API"
+WORKDIR "/src/src/OptixMovies.API"
 RUN dotnet build "./OptixMovies.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
