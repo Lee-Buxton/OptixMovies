@@ -20,3 +20,14 @@ services:
     ports:
       - "8081:8081"
       - "8900:8900"
+
+  optixmovies.storage:
+    container_name: OptixMovies.Storage
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    volumes:
+      - azurite:/data
+    ports:
+      - "10000-10002:10000-10002"
+
+volumes:
+  azurite:
