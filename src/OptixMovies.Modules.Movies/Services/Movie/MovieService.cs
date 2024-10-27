@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace OptixMovies.Modules.Movies.Services.Movies;
 
-public class MovieService
+public class MovieService : IMovieService
 {
     #region Public Properties
 
