@@ -48,14 +48,14 @@ public class GenreService : IGenreService
         return await _cosmos.GetItemsAsync(cancellationToken);
     }
 
-    public async Task<MovieGenre> CreateMovieGenreAsync(MovieGenre movie, CancellationToken cancellationToken)
+    public async Task<MovieGenre> CreateMovieGenreAsync(MovieGenre movieGenre, CancellationToken cancellationToken)
     {
-        return await _cosmos.CreateItemAsync(movie, cancellationToken);
+        return await _cosmos.CreateItemAsync(movieGenre, cancellationToken);
     }
 
-    public async Task<MovieGenre> UpdateMovieGenreAsync(MovieGenre movie, CancellationToken cancellationToken)
+    public async Task<MovieGenre> UpdateMovieGenreAsync(MovieGenre movieGenre, CancellationToken cancellationToken)
     {
-        return await _cosmos.UpdateItemAsync(movie, cancellationToken);
+        return await _cosmos.UpdateItemAsync(movieGenre, cancellationToken);
     }
 
     public async Task<MovieGenre> DeleteMovieGenreAsync(string id, CancellationToken cancellationToken)
