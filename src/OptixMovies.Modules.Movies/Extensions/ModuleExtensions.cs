@@ -8,12 +8,13 @@ namespace OptixMovies.Modules.Movies.Extensions;
 
 public static class ModuleExtensions
 {
-    public static IServiceCollection AddMoviesModule(this IServiceCollection services, Action<MoviesOptions> configureOptions)
+    public static IServiceCollection AddMoviesModule(this IServiceCollection services, Action<MoviesModuleOptions> configureOptions)
     {
-        services.AddOptions<MoviesOptions>()
+        services.AddOptions<MoviesModuleOptions>()
             .Configure(configureOptions);
 
         services.AddSingleton<ICosmosService<Movie>, CosmosService<Movie>>();
+
 
         return services;
     }

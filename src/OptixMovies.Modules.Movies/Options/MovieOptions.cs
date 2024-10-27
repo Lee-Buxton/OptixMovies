@@ -1,5 +1,5 @@
 ﻿namespace OptixMovies.Modules.Movies.Options;
 
-internal class MovieOptions
+public class MovieOptions
 {
 }

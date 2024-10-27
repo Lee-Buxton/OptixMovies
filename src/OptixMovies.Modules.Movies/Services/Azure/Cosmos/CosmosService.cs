@@ -53,7 +53,7 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
         }
     }
 
-    public async Task<IEnumerable<T>> GetItemsAsync(CancellationToken cancellationToken, string sqlQuery = null, string containerName = null)
+    public async Task<List<T>> GetItemsAsync(CancellationToken cancellationToken, string sqlQuery = null, string containerName = null)
     {
         try
         {
@@ -65,7 +65,7 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
                 var response = query.ReadNextAsync(cancellationToken);
                 items.AddRange(response.Result.ToList());
             }
-            return items.AsEnumerable();
+            return items;
         }
         catch (Exception ex)
         {
