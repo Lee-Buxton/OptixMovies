@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using OptixMovies.Modules.Movies.Records;
 using OptixMovies.Modules.Movies.Services.Azure.Cosmos.Interfaces;
 using OptixMovies.Modules.Movies.Services.Movies;
+using System.Threading;
 using System.Web;
 
 namespace OptixMovies.Modules.Movies.Services.Genre;
@@ -88,6 +89,31 @@ public class GenreService : IGenreService
             cancellationToken);
             movieGenresCache.Add(movieGenre);
             return movieGenre.Id;
+        }
+    }
+
+    public async Task<string> MapIdtoNameAsync(Guid id, CancellationToken cancellationToken)
+    {
+        if (movieGenresCache.Count == 0)
+            movieGenresCache = await GetMovieGenresAsync(cancellationToken);
+
+        if(movieGenresCache.Exists(x => x.Id.Equals(id)))
+        {
+            return movieGenresCache.Find(x => x.Id.Equals(id)).Name;
+        }
+        else
+        {
+            movieGenresCache = await GetMovieGenresAsync(cancellationToken);
+
+            try
+            {
+                return movieGenresCache.Find(x => x.Id.Equals(id)).Name;
+            }
+            catch (NullReferenceException ex) 
+            {
+                _logger.LogError(ex, "Unable to find a genre to match the ID ({id}) provided.", id.ToString());
+                return string.Empty;
+            }
         }
     }
     #endregion

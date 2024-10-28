@@ -66,6 +66,7 @@ For the value, if it's a string then it should be surrounded by single quotes. I
 - ne (Not Equal)
 
 #### Supported Characters for Value
+
 - A-Z (A to Z, both upper and lower case.)
 - 0-9 (Zero to Nine)
 - \+ (Plus)
