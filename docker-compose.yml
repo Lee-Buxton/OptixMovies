@@ -8,11 +8,11 @@ services:
     depends_on: 
       - optixmovies.cosmos
 
-  optixmovies.gateway:
-    image: ${DOCKER_REGISTRY-}optixmoviesgateway
-    build:
-      context: .
-      dockerfile: src/OptixMovies.Gateway/Dockerfile
+  # optixmovies.gateway:
+  #   image: ${DOCKER_REGISTRY-}optixmoviesgateway
+  #   build:
+  #     context: .
+  #     dockerfile: src/OptixMovies.Gateway/Dockerfile
 
   optixmovies.cosmos:
     container_name: OptixMovies.Cosmos
@@ -21,13 +21,13 @@ services:
       - "8081:8081"
       - "8900:8900"
 
-  optixmovies.storage:
-    container_name: OptixMovies.Storage
-    image: mcr.microsoft.com/azure-storage/azurite:latest
-    volumes:
-      - azurite:/data
-    ports:
-      - "10000-10002:10000-10002"
+  # optixmovies.storage:
+  #   container_name: OptixMovies.Storage
+  #   image: mcr.microsoft.com/azure-storage/azurite:latest
+  #   volumes:
+  #     - azurite:/data
+  #   ports:
+  #     - "10000-10002:10000-10002"
 
 volumes:
   azurite:
