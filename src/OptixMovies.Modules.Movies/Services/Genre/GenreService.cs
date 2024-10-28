@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Humanizer.Localisation;
+using Microsoft.Extensions.Logging;
 using OptixMovies.Modules.Movies.Records;
 using OptixMovies.Modules.Movies.Services.Azure.Cosmos.Interfaces;
 using OptixMovies.Modules.Movies.Services.Movies;
@@ -18,6 +19,8 @@ public class GenreService : IGenreService
     #endregion
 
     #region Fields
+    private List<MovieGenre> movieGenresCache = new List<MovieGenre>();
+
     private readonly ICosmosService<MovieGenre> _cosmos;
     private readonly ILogger<MovieService> _logger;
     #endregion
@@ -63,6 +66,29 @@ public class GenreService : IGenreService
         MovieGenre movieGenre = await _cosmos.GetItemAsync(id, cancellationToken);
         await _cosmos.DeleteItemAsync(id, cancellationToken);
         return movieGenre;
+    }
+
+    public async Task<Guid> FindOrCreateMovieGenreAsync(string movieGenreName, CancellationToken cancellationToken)
+    {
+        if(movieGenresCache.Count == 0)
+            movieGenresCache = await GetMovieGenresAsync(cancellationToken);
+
+        if (movieGenresCache.Exists(x => x.Name.Equals(movieGenreName, StringComparison.CurrentCultureIgnoreCase)))
+        {
+            MovieGenre movieGenre = movieGenresCache.Find(x => x.Name.Equals(movieGenreName, StringComparison.CurrentCultureIgnoreCase));
+            return movieGenre.Id;
+        }
+        else
+        {
+            MovieGenre movieGenre = await CreateMovieGenreAsync(new MovieGenre()
+            {
+                Id = Guid.NewGuid(),
+                Name = movieGenreName.ToLower()
+            },
+            cancellationToken);
+            movieGenresCache.Add(movieGenre);
+            return movieGenre.Id;
+        }
     }
     #endregion
 

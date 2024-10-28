@@ -1,4 +1,6 @@
-﻿namespace OptixMovies.API.Endpoints.V1.Movies.Get;
+﻿using OptixMovies.Modules.Movies.Services.Movies;
+
+namespace OptixMovies.API.Endpoints.V1.Movies.Get;
 
 public class GetMoviesEndpoint : Endpoint<GetMoviesEndpointRequest, GetMoviesEndpointResponse>
 {
@@ -14,14 +16,16 @@ public class GetMoviesEndpoint : Endpoint<GetMoviesEndpointRequest, GetMoviesEnd
 
     #region Fields
     private readonly ILogger<GetMoviesEndpoint> _logger;
-
+    private readonly IMovieService _movieService;
     #endregion
 
     #region Constructor
     public GetMoviesEndpoint(
-        ILogger<GetMoviesEndpoint> logger)
+        ILogger<GetMoviesEndpoint> logger,
+        IMovieService movieService)
     {
         _logger = logger;
+        _movieService = movieService;
     }
     #endregion
 

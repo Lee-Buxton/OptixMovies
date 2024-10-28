@@ -1,4 +1,6 @@
 ﻿
+using OptixMovies.Modules.Movies.Services.Genre;
+
 namespace OptixMovies.API.Endpoints.V1.Movies.Genres.Get;
 
 public class GetMovieGenresEndpoint : EndpointWithoutRequest<GetMovieGenresResponse>
@@ -13,13 +15,17 @@ public class GetMovieGenresEndpoint : EndpointWithoutRequest<GetMovieGenresRespo
     #endregion
 
     #region Fields
-
+    private readonly IGenreService _genreService;
+    private readonly ILogger<GetMovieGenresEndpoint> _logger;
     #endregion
 
     #region Constructor
-    public GetMovieGenresEndpoint()
+    public GetMovieGenresEndpoint(
+        IGenreService genreService,
+        ILogger<GetMovieGenresEndpoint> logger)
     {
-        
+        _genreService = genreService;
+        _logger = logger;
     }
     #endregion
 

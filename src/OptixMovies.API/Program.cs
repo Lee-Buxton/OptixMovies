@@ -1,3 +1,5 @@
+using OptixMovies.Modules.Movies.Extensions;
+
 namespace OptixMovies.API
 {
     public class Program
@@ -5,9 +7,20 @@ namespace OptixMovies.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var app = builder.Build();
+            builder.Services.AddFastEndpoints();
+            builder.Services.AddMoviesModule(
+                o =>
+                {
+                    o.Cosmos = new Modules.Movies.Options.CosmosOptions()
+                    {
+                        DatabaseName = "Movies",
+                        ConnectionString = ""
+                    };
+                });
 
-            app.MapGet("/", () => "Hello World!");
+            var app = builder.Build();
+            app.UseFastEndpoints();
+            //app.MapGet("/", () => "Hello World!");
 
             app.Run();
         }

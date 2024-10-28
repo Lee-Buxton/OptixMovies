@@ -165,10 +165,24 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
     #region Private Methods
     private Database InitializeCosmosService()
     {
-        var cosmosClient = new CosmosClient(_options.ConnectionString);
-        var database = cosmosClient.GetDatabase(_options.DatabaseName);
 
-        return database;
+#if DEBUG
+        CosmosClientOptions options = new()
+        {
+            HttpClientFactory = () => new HttpClient(new HttpClientHandler()
+            {
+                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            }),
+            ConnectionMode = ConnectionMode.Gateway,
+        };
+        var cosmosClient = new CosmosClient(_options.ConnectionString, options);
+#else
+        var cosmosClient = new CosmosClient(_options.ConnectionString);
+        
+#endif
+        Task<DatabaseResponse> response = cosmosClient.CreateDatabaseIfNotExistsAsync(_options.DatabaseName);
+        response.Wait();
+        return response.Result.Database;
     }
 
     private string GetContainerName(string containerName)
@@ -187,7 +201,7 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
         try
         {
             var containerResponse = await _cosmos.CreateContainerIfNotExistsAsync(
-            GetContainerName(containerName), "/id");
+                GetContainerName(containerName), "/id", 1000);
 
             return containerResponse.Container;
         }
