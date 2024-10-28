@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: src/OptixMovies.API/Dockerfile
+    ports:
+      - "60514:8081"
     depends_on: 
       - optixmovies.cosmos
 

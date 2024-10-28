@@ -3,17 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35323.107
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{41FC3696-9BE6-4B9B-A1F8-82223F9DA7EF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Presentation", "1. Presentation", "{41FC3696-9BE6-4B9B-A1F8-82223F9DA7EF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4DE171C9-0446-42C4-ABF2-0BEC2B64B6AC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{BC811FDC-5C9E-4EB9-96CA-AD1C9DF15EAB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Application", "2. Application", "{BC811FDC-5C9E-4EB9-96CA-AD1C9DF15EAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptixMovies.API", "src\OptixMovies.API\OptixMovies.API.csproj", "{A67B9DFE-3232-4DB0-9BBF-1371EB09DD1A}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{460647F4-F992-4D96-A3F6-D07BE94C3E21}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptixMovies.Modules.Movies", "src\OptixMovies.Modules.Movies\OptixMovies.Modules.Movies.csproj", "{A162EA90-A0B5-44E1-A588-B605138398D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8AB58E4D-229B-4659-80A5-090C04BEF33A}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
