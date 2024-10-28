@@ -43,7 +43,7 @@ Querying is fairly straight forward, here are an example:
 ### Filter
 You can have multiple filters, though they are AND'd together. Each filter is seperated by a comma. Each filter uses the following format. 
 
-<Field>(space)<Operator>(space)<Value>
+`<Field>(space)<Operator>(space)<Value>`
 
 For the value, if it's a string then it should be surrounded by single quotes. If it's a number those quotes are not needed.
 
