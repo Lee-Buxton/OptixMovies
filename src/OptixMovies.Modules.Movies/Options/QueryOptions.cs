@@ -2,12 +2,5 @@
 
 public class QueryOptions
 {
-    public string[] AllowedFields { get; set; } =
-    [
-        "releaseDate",
-        "title",
-        "rating.averageScore",
-        "genres",
-        "originalLanguage"
-    ];
+    public string[] AllowedFields { get; set; }
 }

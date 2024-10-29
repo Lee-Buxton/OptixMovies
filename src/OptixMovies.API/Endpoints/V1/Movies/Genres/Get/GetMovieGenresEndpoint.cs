@@ -1,4 +1,5 @@
 ﻿
+using OptixMovies.Modules.Movies.Records;
 using OptixMovies.Modules.Movies.Services.Genre;
 
 namespace OptixMovies.API.Endpoints.V1.Movies.Genres.Get;
@@ -43,9 +44,14 @@ public class GetMovieGenresEndpoint : EndpointWithoutRequest<GetMovieGenresRespo
         Version(1);
     }
 
-    public override Task HandleAsync(CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
-        return base.HandleAsync(ct);
+        List<MovieGenre> movieGenres = await _genreService.GetMovieGenresAsync(ct);
+
+        await SendAsync(new GetMovieGenresResponse()
+        {
+            Genres = movieGenres
+        }, 200, ct);
     }
     #endregion
 

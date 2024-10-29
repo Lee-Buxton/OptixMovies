@@ -42,7 +42,17 @@ public class MovieService : IMovieService
 
     public async Task<List<Movie>> GetMoviesAsync(Query query, CancellationToken cancellationToken)
     {
-        return await _cosmos.GetItemsAsync(cancellationToken);
+        return await _cosmos.GetItemsAsync(
+            cancellationToken,
+            sqlQuery: _query.GenerateQuery(query));
+    }
+
+    public async Task<int> GetMoviesCountAsync(Query query, CancellationToken cancellationToken)
+    {
+        return await _cosmos.GetCountAsync(
+            _query.GenerateWhere(
+                query.Filter), 
+            cancellationToken);
     }
 
     public async Task<Movie> CreateMovieAsync(Movie movie, CancellationToken cancellationToken)

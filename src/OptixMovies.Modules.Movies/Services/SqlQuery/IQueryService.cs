@@ -7,6 +7,7 @@ namespace OptixMovies.Modules.Movies.Services.SqlQuery
         string GenerateQuery(Query query);
         string GenerateWhere(string filter);
         bool Validate(Query query);
-        bool Validate(string filter);
+        bool ValidateFilter(string filter);
+        bool ValidateOrderBy(string orderBy);
     }
 }

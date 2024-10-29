@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using OptixMovies.Modules.Movies.Records;
 using OptixMovies.Modules.Movies.Services.Azure.Cosmos.Interfaces;
 using OptixMovies.Modules.Movies.Services.Movies;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Web;
 
@@ -43,11 +44,6 @@ public class GenreService : IGenreService
     }
 
     public async Task<List<MovieGenre>> GetMovieGenresAsync(CancellationToken cancellationToken)
-    {
-        return await GetMovieGenresAsync(string.Empty, cancellationToken);
-    }
-
-    public async Task<List<MovieGenre>> GetMovieGenresAsync(string genreName, CancellationToken cancellationToken, bool partialMatch = false)
     {
         return await _cosmos.GetItemsAsync(cancellationToken);
     }
@@ -116,6 +112,42 @@ public class GenreService : IGenreService
             }
         }
     }
+
+    public Guid MapNameToId(string genreName, CancellationToken cancellationToken)
+    {
+        Task<Guid> mapNametoId = MapNameToIdAsync(genreName, cancellationToken);
+        mapNametoId.Wait();
+
+        return mapNametoId.Result;
+    }
+
+    public async Task<Guid> MapNameToIdAsync(string genreName, CancellationToken cancellationToken)
+    {
+        if (movieGenresCache.Count == 0)
+            movieGenresCache = await GetMovieGenresAsync(cancellationToken);
+
+        if (movieGenresCache.Exists(x => x.Name.Equals(genreName, StringComparison.CurrentCultureIgnoreCase)))
+        {
+            MovieGenre movieGenre = movieGenresCache.Find(x => x.Name.Equals(genreName, StringComparison.CurrentCultureIgnoreCase));
+            return movieGenre.Id;
+        }
+        else
+        {
+            movieGenresCache = await GetMovieGenresAsync(cancellationToken);
+
+            try
+            {
+                return movieGenresCache.Find(x => x.Name.Equals(genreName, StringComparison.CurrentCultureIgnoreCase)).Id;
+            }
+            catch (NullReferenceException ex)
+            {
+                _logger.LogError(ex, "Unable to find a genre to match the name ({name}) provided.", genreName.ToLower());
+                return Guid.Empty;
+            }
+        }
+    }
+
+    
     #endregion
 
     #region Override Methods

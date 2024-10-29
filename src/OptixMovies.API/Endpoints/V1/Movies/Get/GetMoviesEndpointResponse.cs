@@ -1,4 +1,4 @@
-﻿using OptixMovies.API.Endpoints.V1.Movies.Get.DTO;
+﻿using OptixMovies.API.DTO;
 
 namespace OptixMovies.API.Endpoints.V1.Movies.Get;
 

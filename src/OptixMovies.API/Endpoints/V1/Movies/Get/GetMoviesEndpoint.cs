@@ -1,4 +1,4 @@
-﻿using OptixMovies.API.Endpoints.V1.Movies.Get.DTO;
+﻿using OptixMovies.API.DTO;
 using OptixMovies.Modules.Movies.Records;
 using OptixMovies.Modules.Movies.Services.Genre;
 using OptixMovies.Modules.Movies.Services.Movies;
@@ -50,6 +50,7 @@ public class GetMoviesEndpoint : Endpoint<GetMoviesEndpointRequest, GetMoviesEnd
 
     public override async Task HandleAsync(GetMoviesEndpointRequest req, CancellationToken ct)
     {
+        int resultCount = 0;
         List<MovieDto> moviesDto = new List<MovieDto>();
 
         if (req.Id != string.Empty)
@@ -57,30 +58,41 @@ public class GetMoviesEndpoint : Endpoint<GetMoviesEndpointRequest, GetMoviesEnd
             Movie movie = await _movieService.GetMovieAsync(req.Id, ct);
             moviesDto.Add(
                 await MapMovieToMovieDto(movie, ct));
+
+            resultCount = 1;
         }
         else
         {
-            List<Movie> movies = await _movieService.GetMoviesAsync(new Query()
+            Query query = new Query()
             {
                 Filter = req.Filter,
                 OrderBy = req.OrderBy,
-                Top = req.Top,
-                Skip = req.Skip
-            }, ct);
+                Top = req.Top.Value,
+                Skip = req.Skip.Value
+            };
+
+            List<Movie> movies = await _movieService.GetMoviesAsync(
+                query, 
+                ct);
+
 
             foreach (Movie movie in movies)
             {
                 moviesDto.Add(
                     await MapMovieToMovieDto(movie, ct));
             }
+
+            resultCount = await _movieService.GetMoviesCountAsync(
+                query, 
+                ct);
         }
 
         await SendAsync(new GetMoviesEndpointResponse()
         {
             Movies = moviesDto,
-            PageSize = req.Top,
-            Page = req.Top % req.Skip,
-            ResultsCount = 0
+            PageSize = req.Top.Value,
+            Page = CalculatePageNumber(req.Top.Value, req.Skip.Value),
+            ResultsCount = resultCount
         });
     }
     #endregion
@@ -106,12 +118,25 @@ public class GetMoviesEndpoint : Endpoint<GetMoviesEndpointRequest, GetMoviesEnd
             Popularity = movie.TMDBPopularity,
             Rating = new RatingDto()
             {
-                AvgScore = movie.Rating.AverageScore,
+                AverageScore = movie.Rating.AverageScore,
                 VoteCount = movie.Rating.VoteCount
             },
             Genres = genres,
             PosterUrl = movie.PosterURL,
         };
+    }
+
+    private int CalculatePageNumber(int top, int skip)
+    {
+        if (skip == 0)
+            return 0;
+
+        int page = top / skip;
+        if (top % skip != 0)
+        {
+            page++;
+        }
+        return page;
     }
     #endregion
 }

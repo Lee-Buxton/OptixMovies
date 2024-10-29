@@ -9,5 +9,6 @@ namespace OptixMovies.Modules.Movies.Services.Movies
         Task<Movie> GetMovieAsync(string id, CancellationToken cancellationToken);
         Task<List<Movie>> GetMoviesAsync(Query query, CancellationToken cancellationToken);
         Task<Movie> UpdateMovieAsync(Movie movie, CancellationToken cancellationToken);
+        Task<int> GetMoviesCountAsync(Query query, CancellationToken cancellationToken);
     }
 }

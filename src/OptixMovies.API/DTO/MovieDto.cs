@@ -1,4 +1,4 @@
-﻿namespace OptixMovies.API.Endpoints.V1.Movies.Get.DTO;
+﻿namespace OptixMovies.API.DTO;
 
 public class MovieDto
 {
@@ -11,10 +11,4 @@ public class MovieDto
     public RatingDto Rating { get; set; }
     public List<string> Genres { get; set; }
     public string PosterUrl { get; set; }
-}
-
-public record RatingDto
-{
-    public int VoteCount { get; set; }
-    public double AvgScore { get; set; }
 }

@@ -122,7 +122,7 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
         }
     }
 
-    public async Task<int> GetCountAsync(string sqlWhere, string containerName, CancellationToken cancellationToken)
+    public async Task<int> GetCountAsync(string sqlWhere, CancellationToken cancellationToken, string containerName = null)
     {
         try
         {
@@ -175,7 +175,7 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
             }),
             ConnectionMode = ConnectionMode.Gateway,
         };
-        var cosmosClient = new CosmosClient(_options.ConnectionString, options);
+        var cosmosClient = new CosmosClient(_options.Endpoint, _options.AuthKey, options);
 #else
         var cosmosClient = new CosmosClient(_options.ConnectionString);
         

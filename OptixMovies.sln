@@ -5,8 +5,6 @@ VisualStudioVersion = 17.12.35323.107
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Presentation", "1. Presentation", "{41FC3696-9BE6-4B9B-A1F8-82223F9DA7EF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4DE171C9-0446-42C4-ABF2-0BEC2B64B6AC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Application", "2. Application", "{BC811FDC-5C9E-4EB9-96CA-AD1C9DF15EAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptixMovies.API", "src\OptixMovies.API\OptixMovies.API.csproj", "{A67B9DFE-3232-4DB0-9BBF-1371EB09DD1A}"

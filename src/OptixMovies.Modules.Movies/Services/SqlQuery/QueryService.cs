@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using OptixMovies.Modules.Movies.Options;
 using OptixMovies.Modules.Movies.Records;
+using OptixMovies.Modules.Movies.Services.Genre;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,16 +25,21 @@ public class QueryService : IQueryService
 
     #region Fields
     private readonly ILogger _logger;
+    private readonly IGenreService _genreService;
     private readonly QueryOptions _options;
     private readonly Dictionary<string, string> _conditions;
+
+    private const string _filterRegex = @"^(?<field>[a-z\.]*)\s(?<condition>eq|lt|gt|ge|le|ne)\s(?<value>[a-z0-9\s\+\'\-\.\(\)|\:]*)$";
     #endregion
 
     #region Constructor
     public QueryService(
         ILogger<QueryService> logger,
-        IOptions<MoviesModuleOptions> options)
+        IOptions<MoviesModuleOptions> options,
+        IGenreService genreService)
     {
         _logger = logger;
+        _genreService = genreService;
         _options = options.Value.Query;
         _conditions = new Dictionary<string, string>
         {
@@ -84,25 +90,73 @@ public class QueryService : IQueryService
         return sql + " ";
     }
 
+    public bool Validate(Query query)
+    {
+        if (string.IsNullOrEmpty(query.Filter))
+            return true;
+
+        return ValidateFilter(query.Filter);
+    }
+
+    public bool ValidateFilter(string filter)
+    {
+        if (string.IsNullOrEmpty(filter))
+            return true;
+
+        string[] filters = filter.Split(",");
+
+        foreach (string item in filters)
+        {
+            Match match = Regex.Match(item.Trim(), _filterRegex, RegexOptions.IgnoreCase);
+
+            if (!match.Success)
+                return false;
+
+            if (!_options.AllowedFields.Contains(match.Groups["field"].Value))
+                return false;
+        }
+
+        return true;
+    }
+
+    public bool ValidateOrderBy(string orderBy)
+    {
+        return true;
+    }
+    #endregion
+
+    #region Override Methods
+
+    #endregion
+
+    #region Private Methods
     private string ProcessFilter(string filter)
     {
-        Match match = Regex.Match(filter, @"(?<field>[a-z\.]*)\s(?<condition>eq|lt|gt|ge|le|ne)\s(?<value>[a-z0-9\s\+\'\-\.\(\)|]*)", RegexOptions.IgnoreCase);
+        Match match = Regex.Match(filter, _filterRegex, RegexOptions.IgnoreCase);
 
         if (match.Success)
         {
             if (match.Groups["field"].Value == "id")
             {
                 return string.Format("c.{0} {1} {2}",
-                match.Groups["field"].Value,
-                _conditions[match.Groups["condition"].Value.ToLower()],
-                match.Groups["value"].Value
+                    match.Groups["field"].Value,
+                    _conditions[match.Groups["condition"].Value.ToLower()],
+                    match.Groups["value"].Value
                 );
             }
 
-            return string.Format("c.listing.{0} {1} {2}",
-            match.Groups["field"].Value,
-            _conditions[match.Groups["condition"].Value.ToLower()],
-            match.Groups["value"].Value
+            if(match.Groups["field"].Value == "Genres")
+            {
+                return string.Format("ARRAY_CONTAINS(c.{0}, \"{1}\", false)",
+                match.Groups["field"].Value,
+                _genreService.MapNameToId(match.Groups["value"].Value.ToLower().Substring(1, (match.Groups["value"].Value.Length - 2)), new())
+            );
+            }
+
+            return string.Format("c.{0} {1} {2}",
+                match.Groups["field"].Value,
+                _conditions[match.Groups["condition"].Value.ToLower()],
+                match.Groups["value"].Value
             );
         }
         else
@@ -141,9 +195,9 @@ public class QueryService : IQueryService
 
         if (match.Success)
         {
-            return string.Format("c.listing.{0} {1}",
-            match.Groups["field"].Value,
-            match.Groups["direction"].Value.ToUpper()
+            return string.Format("c.{0} {1}",
+                match.Groups["field"].Value,
+                match.Groups["direction"].Value.ToUpper()
             );
         }
         else
@@ -151,42 +205,5 @@ public class QueryService : IQueryService
             throw new Exception("Syntax Error. Unable to process order by.");
         }
     }
-
-    public bool Validate(Query query)
-    {
-        if (string.IsNullOrEmpty(query.Filter))
-            return true;
-
-        return Validate(query.Filter);
-    }
-
-    public bool Validate(string filter)
-    {
-        if (string.IsNullOrEmpty(filter))
-            return true;
-
-        string[] filters = filter.Split(",");
-
-        foreach (string item in filters)
-        {
-            Match match = Regex.Match(item.Trim(), @"^(?<field>[a-z\.]*)\s(?<condition>eq|lt|gt|ge|le|ne)\s(?<value>[a-z0-9\s\+\'\-\.\(\)|]*)$", RegexOptions.IgnoreCase);
-
-            if (!match.Success)
-                return false;
-
-            if (!_options.AllowedFields.Contains(match.Groups["field"].Value))
-                return false;
-        }
-
-        return true;
-    }
-    #endregion
-
-    #region Override Methods
-
-    #endregion
-
-    #region Private Methods
-
     #endregion
 }

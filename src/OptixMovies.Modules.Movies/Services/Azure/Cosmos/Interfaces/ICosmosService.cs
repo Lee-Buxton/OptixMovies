@@ -7,5 +7,5 @@ public interface ICosmosService<T>
     Task<T> CreateItemAsync(T item, CancellationToken cancellationToken, string containerName = null);
     Task<T> UpdateItemAsync(T item, CancellationToken cancellationToken, string containerName = null);
     Task DeleteItemAsync(string id, CancellationToken cancellationToken, string containerName = null);
-    Task<int> GetCountAsync(string sqlWhere, string containerName, CancellationToken cancellationToken);
+    Task<int> GetCountAsync(string sqlWhere, CancellationToken cancellationToken, string containerName = null);
 }

@@ -1,0 +1,201 @@
+{
+	"info": {
+		"_postman_id": "ff7eb9d2-49f3-494d-91ae-6fa30bf55444",
+		"name": "OptixMovies",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13229166"
+	},
+	"item": [
+		{
+			"name": "Import Movie Database",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "https://localhost:60514/v1/movies/import",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "60514",
+					"path": [
+						"movies",
+						"import",
+						"v1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Movies - Ordered By Release Date",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:60514/v1/movies?orderBy=ReleaseDate DESC",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "60514",
+					"path": [
+						"movies",
+						"v1"
+					],
+					"query": [
+						{
+							"key": "orderBy",
+							"value": "ReleaseDate DESC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Movies - Ordered By Title",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:60514/v1/movies?orderBy=Title DESC",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "60514",
+					"path": [
+						"movies",
+						"v1"
+					],
+					"query": [
+						{
+							"key": "orderBy",
+							"value": "Title DESC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Movies - Filtered by Title",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:60514/v1/movies?filter=Title eq 'Spider-Man'",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "60514",
+					"path": [
+						"v1",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "Title eq 'Spider-Man'"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Movies - Filtered by Rating",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:60514/v1/movies?filter=Rating.AverageScore gt 8",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "60514",
+					"path": [
+						"v1",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "Rating.AverageScore gt 8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Movies - 100 Items per page",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:60514/v1/movies?top=100",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "60514",
+					"path": [
+						"v1",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "top",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Movies - 100 Items per page, Page 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:60514/v1/movies?top=100&skip=100",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "60514",
+					"path": [
+						"v1",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "top",
+							"value": "100"
+						},
+						{
+							"key": "skip",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
