@@ -152,10 +152,10 @@ example
 
 The project consists of the following two parts: 
 
-API Project - OptixMovies.API
+API Project - OptixMovies.API  
 This represents the presentation layer in clean architecture. I have kept the core application logic within the module project. Only the API endpoints and the logic need to serve those are included in this project.
 
-Movie Module - OptixMovies.Modules.Movies
+Movie Module - OptixMovies.Modules.Movies  
 This represents a couple layers of the clean architecture. Due to simplicity I have merged the core/domain, application, infrastructure and presistence within a single project. Though it would be easy to split out the code into seperate class libraries.
 The Module name, comes from the overall architecture being modular monolith, though it would be fairly easy to change it to a microservice.
 
