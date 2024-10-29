@@ -55,12 +55,11 @@ public class MovieImportService : IMovieImportService
 
         foreach (var item in movieImportFiles)
         {
-            //await ProcessMovieAsync(item, cancellationToken);
             movieList.Add(
                 await MapImportedMoviesToMovie(item, cancellationToken));
         }
 
-        _movieService.BulkCreateMovieAsync(movieList, cancellationToken);
+        await _movieService.BulkCreateMovieAsync(movieList, cancellationToken);
 
         return movieList.Count();
     }
@@ -71,29 +70,6 @@ public class MovieImportService : IMovieImportService
     #endregion
 
     #region Private Methods
-    private async Task ProcessMovieAsync(MovieImportFile movieImportFile, CancellationToken cancellationToken)
-    {
-        Movie movie = new Movie()
-        {
-            Id = Guid.NewGuid(),
-            Title = movieImportFile.Title,
-            Description = movieImportFile.Overview,
-            ReleaseDate = DateOnly.Parse(movieImportFile.Release_Date),
-            TMDBPopularity = movieImportFile.Popularity,
-            OriginalLanguage = movieImportFile.Original_Language,
-            Rating = new Rating()
-            {
-                VoteCount = movieImportFile.Vote_Count,
-                AverageScore = movieImportFile.Vote_Average
-            },
-            PosterURL = movieImportFile.Poster_Url,
-            Genres = movieImportFile.Genre.ToLower().Split(new string[] { "," }, StringSplitOptions.TrimEntries).ToList()
-        };
-
-        await _movieService.CreateMovieAsync(movie, cancellationToken);
-
-        _importCount++;
-    }
 
     private async Task<Movie> MapImportedMoviesToMovie(MovieImportFile movieImportFile, CancellationToken cancellationToken)
     {
