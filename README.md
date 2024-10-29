@@ -1,15 +1,15 @@
 # OptixMovies
 
-OptixMovies is a demo RESTful API project that allows users to access and edit a database of movies. 
+OptixMovies is a demo RESTful API project that allows users to access a database of movies. 
 
 ## Task Items
 
 This project was requested to have the following features: 
 
 - Required
-  - As a user I want to search movies by title/nameî
+  - As a user I want to search movies by title/name‚Äù
   - As a user I want to be able to limit the number of results per search
-  - As a user I want to be able to ëpageí through the list of movies
+  - As a user I want to be able to ‚Äòpage‚Äô through the list of movies
   - As a user I want to filter movies by genre
 - Optional
   - As a user I want to filter movies by actors
