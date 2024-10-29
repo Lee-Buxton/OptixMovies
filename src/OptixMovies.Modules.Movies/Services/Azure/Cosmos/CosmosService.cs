@@ -207,6 +207,7 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
 
         Task<DatabaseResponse> response = cosmosClient.CreateDatabaseIfNotExistsAsync(_options.DatabaseName);
         response.Wait();
+
         return (CosmosClient: cosmosClient, CosmosDatabase: response.Result.Database);
     }
 
@@ -225,9 +226,23 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
     {
         try
         {
-            var containerResponse = await _cosmos.CreateContainerIfNotExistsAsync(
-                GetContainerName(containerName), 
+            ContainerResponse containerResponse;
+
+            if (_options.IsEmulatorInUse)
+            {
+                containerResponse = await _cosmos.CreateContainerIfNotExistsAsync(
+                GetContainerName(containerName),
+                _options.PartitionKey,
+                4000);
+            }
+            else
+            {
+                containerResponse = await _cosmos.CreateContainerIfNotExistsAsync(
+                GetContainerName(containerName),
                 _options.PartitionKey);
+            }
+
+             
 
             return containerResponse.Container;
         }

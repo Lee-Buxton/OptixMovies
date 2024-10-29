@@ -1,4 +1,6 @@
 using OptixMovies.Modules.Movies.Extensions;
+using FastEndpoints;
+using FastEndpoints.Swagger;
 
 namespace OptixMovies.API
 {

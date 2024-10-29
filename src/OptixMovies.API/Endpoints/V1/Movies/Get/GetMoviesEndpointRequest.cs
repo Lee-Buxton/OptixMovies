@@ -1,4 +1,6 @@
-﻿namespace OptixMovies.API.Endpoints.V1.Movies.Get;
+﻿using FastEndpoints;
+
+namespace OptixMovies.API.Endpoints.V1.Movies.Get;
 
 public record GetMoviesEndpointRequest
 {

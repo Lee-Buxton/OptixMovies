@@ -16,11 +16,9 @@ This project was requested to have the following features:
 -- As a user I want to be able to sort movies by title/name or release date
 
 The project can do all except "As a user I want to filter movies by actors" as the dataset provided doesn't include the actor information.
-If I wanted to achieve that I would have needed to setup a connection to TMDB or IMDB to get the actor information direct from their API, and I felt I didn't have the time to go down this path, as this was to be a quick project.
+If I wanted to achieve that I would have needed to setup a connection to TMDB or IMDB to get the actor information direct from their API.
 
 ## How to run
-
-``
 
 To run this application you will require the Cosmos DB Emulator, or alternatively you can setup a Cosmos Instance with an Azure Account.
 https://aka.ms/cosmosdb-emulator
@@ -77,7 +75,7 @@ data/MoviesDB/mymoviedb.csv
 Slim Movies DB - Around 500 Movies
 data/MoviesDB/mymoviedb-slim.csv
 
-Due to the full DB taking 7-8 minutes to import, a smaller set of sample data is also provided. 
+Smaller dataset was put together for efficency of time, as the larger one can take a little itme to import, usually less than a minute. 
 
 ## Endpoints
 

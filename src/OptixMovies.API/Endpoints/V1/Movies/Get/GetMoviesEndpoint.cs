@@ -1,4 +1,5 @@
-﻿using OptixMovies.API.DTO;
+﻿using FastEndpoints;
+using OptixMovies.API.DTO;
 using OptixMovies.Modules.Movies.Records;
 using OptixMovies.Modules.Movies.Services.Movies;
 

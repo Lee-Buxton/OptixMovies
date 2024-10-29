@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using FastEndpoints;
+using FluentValidation;
 using OptixMovies.Modules.Movies.Services.SqlQuery;
 
 namespace OptixMovies.API.Endpoints.V1.Movies.Get;
