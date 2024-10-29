@@ -7,13 +7,13 @@ OptixMovies is a demo RESTful API project that allows users to access and edit a
 This project was requested to have the following features: 
 
 - Required
-- - As a user I want to search movies by title/name”
-- - As a user I want to be able to limit the number of results per search
-- - As a user I want to be able to ‘page’ through the list of movies
-- - As a user I want to filter movies by genre
+  - As a user I want to search movies by title/name”
+  - As a user I want to be able to limit the number of results per search
+  - As a user I want to be able to ‘page’ through the list of movies
+  - As a user I want to filter movies by genre
 - Optional
-- - As a user I want to filter movies by actors
-- - As a user I want to be able to sort movies by title/name or release date
+  - As a user I want to filter movies by actors
+  - As a user I want to be able to sort movies by title/name or release date
 
 The project can do all except "As a user I want to filter movies by actors" as the dataset provided doesn't include the actor information.
 If I wanted to achieve that I would have needed to setup a connection to TMDB or IMDB to get the actor information direct from their API.
