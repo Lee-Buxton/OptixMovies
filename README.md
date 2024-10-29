@@ -47,7 +47,7 @@ Note: change "optix-movies-db" to the name of the DB you set, if the above comma
 
 #### User Secret
 
-Add the Cosmos Primary Key to the projects user secrets.
+Add the Cosmos Primary Key to the projects user secrets.  
 `dotnet user-secrets set "Cosmos:AuthKey" "Primary Key Here" --project .\src\OptixMovies.API`
 
 #### Run the application
@@ -168,9 +168,9 @@ Application
  - OptixMovies.Modules.Movies
 
 Infrastructure / Persistence
- - OptixMovies.Infra.Azure
+ - OptixMovies.Infra.Azure  
    I would group all azure items into one library, though you could seperate them further based on individual product.
 
 Domain / Core
- - OptixMovies.Domain
+ - OptixMovies.Domain  
    The name can easily be changed, I'm partial to using common or core over domain. 
