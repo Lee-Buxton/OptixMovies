@@ -31,16 +31,16 @@ The Emulators certificate should have automatically installed into your cert sto
 
 #### Azure
 
-Create a resource Group
+Create a resource Group  
 `az group create --name OptixMovies --location northeurope`
 
-Create the Cosmos DB Instance
+Create the Cosmos DB Instance  
 `az cosmosdb create --name optix-movies-db --resource-group OptixMovies --kind GlobalDocumentDB --locations regionName="North Europe" failoverPriority=0 isZoneRedundant=False --capabilities EnableServerless`
 
-Get the Primary Key for the instance.
+Get the Primary Key for the instance.  
 `az cosmosdb keys list --name optix-movies-db --resource-group OptixMovies --query "primaryMasterKey" --output tsv`
 
-Update the appsettings.json with the account endpoint for your cosmos instance.
+Update the appsettings.json with the account endpoint for your cosmos instance.  
 `"AccountEndpoint": "https://optix-movies-db.documents.azure.com:443/"`
 
 Note: change "optix-movies-db" to the name of the DB you set, if the above commands work, the name will be optix-movies-db, though if it's reported as taken you will need to adjust the name to something else.
