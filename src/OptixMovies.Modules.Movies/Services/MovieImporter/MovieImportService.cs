@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using CsvHelper.Configuration.Attributes;
 using Microsoft.Extensions.Logging;
 using OptixMovies.Modules.Movies.Records;
 using OptixMovies.Modules.Movies.Services.Movies;
@@ -37,9 +38,10 @@ public class MovieImportService : IMovieImportService
     #endregion
 
     #region Public Methods
-    public async Task ImportFromCsvAsync(byte[] csvFile, CancellationToken cancellationToken)
+    public async Task<int> ImportFromCsvAsync(byte[] csvFile, CancellationToken cancellationToken)
     {
         List<MovieImportFile> movieImportFiles;
+        List<Movie> movieList = new List<Movie>();
 
         using (MemoryStream memoryStream = new MemoryStream(csvFile))
         using (StreamReader reader = new StreamReader(memoryStream))
@@ -53,8 +55,14 @@ public class MovieImportService : IMovieImportService
 
         foreach (var item in movieImportFiles)
         {
-            await ProcessMovieAsync(item, cancellationToken);
+            //await ProcessMovieAsync(item, cancellationToken);
+            movieList.Add(
+                await MapImportedMoviesToMovie(item, cancellationToken));
         }
+
+        _movieService.BulkCreateMovieAsync(movieList, cancellationToken);
+
+        return movieList.Count();
     }
     #endregion
 
@@ -85,6 +93,28 @@ public class MovieImportService : IMovieImportService
         await _movieService.CreateMovieAsync(movie, cancellationToken);
 
         _importCount++;
+    }
+
+    private async Task<Movie> MapImportedMoviesToMovie(MovieImportFile movieImportFile, CancellationToken cancellationToken)
+    {
+        Movie movie = new Movie()
+        {
+            Id = Guid.NewGuid(),
+            Title = movieImportFile.Title,
+            Description = movieImportFile.Overview,
+            ReleaseDate = DateOnly.Parse(movieImportFile.Release_Date),
+            TMDBPopularity = movieImportFile.Popularity,
+            OriginalLanguage = movieImportFile.Original_Language,
+            Rating = new Rating()
+            {
+                VoteCount = movieImportFile.Vote_Count,
+                AverageScore = movieImportFile.Vote_Average
+            },
+            PosterURL = movieImportFile.Poster_Url,
+            Genres = movieImportFile.Genre.ToLower().Split(new string[] { "," }, StringSplitOptions.TrimEntries).ToList()
+        };
+        
+        return movie; 
     }
     #endregion
 }

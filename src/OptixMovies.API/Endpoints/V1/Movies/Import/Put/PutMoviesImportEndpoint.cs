@@ -46,17 +46,21 @@ public class PutMoviesImportEndpoint : Endpoint<PutMoviesImportRequest, PutMovie
 
     public override async Task HandleAsync(PutMoviesImportRequest req, CancellationToken ct)
     {
+        int importCount;
         using (MemoryStream ms = new MemoryStream()) 
         {
             await req.File.CopyToAsync(ms, ct);
 
-            await _movieImportService.ImportFromCsvAsync(
+            importCount = await _movieImportService.ImportFromCsvAsync(
                 ms.ToArray(),
                 ct
             );
         }
 
-        await SendAsync(new PutMoviesImportResponse(), 200, ct);
+        await SendAsync(new PutMoviesImportResponse()
+        {
+            MoviesImported = importCount
+        }, 200, ct);
     }
     #endregion
 

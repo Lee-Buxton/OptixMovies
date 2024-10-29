@@ -20,6 +20,7 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
     #endregion
 
     #region Fields
+    private readonly CosmosClient _cosmosClient;
     private readonly Database _cosmos;
     private readonly ILogger _logger;
     private readonly CosmosOptions _options;
@@ -33,7 +34,9 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
         _logger = logger;
         _options = options.Value.Cosmos;
 
-        _cosmos = InitializeCosmosService();
+        var result = InitializeCosmosService();
+        _cosmosClient = result.CosmosClient;
+        _cosmos = result.CosmosDatabase;
     }
     #endregion
 
@@ -81,6 +84,22 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
             var container = await GetContainerAsync(containerName);
             var response = await container.CreateItemAsync(item, new PartitionKey(item.Id.ToString()), cancellationToken: cancellationToken);
             return response.Resource;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating item in Cosmos");
+            throw;
+        }
+    }
+
+    public async Task CreateBulkItemAsync(List<T> items, CancellationToken cancellationToken, string containerName = null)
+    {
+        try
+        {
+            var container = await GetContainerAsync(containerName);
+            var tasks = items.Select(doc => container.CreateItemAsync(doc)).ToList();
+            Task.WhenAll(tasks);
+            return;
         }
         catch (Exception ex)
         {
@@ -163,7 +182,7 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
     #endregion
 
     #region Private Methods
-    private Database InitializeCosmosService()
+    private (CosmosClient CosmosClient, Database CosmosDatabase) InitializeCosmosService()
     {
 
         CosmosClient cosmosClient;
@@ -188,7 +207,7 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
 
         Task<DatabaseResponse> response = cosmosClient.CreateDatabaseIfNotExistsAsync(_options.DatabaseName);
         response.Wait();
-        return response.Result.Database;
+        return (CosmosClient: cosmosClient, CosmosDatabase: response.Result.Database);
     }
 
     private string GetContainerName(string containerName)

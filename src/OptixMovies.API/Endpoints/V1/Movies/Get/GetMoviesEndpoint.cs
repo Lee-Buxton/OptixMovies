@@ -1,6 +1,5 @@
 ﻿using OptixMovies.API.DTO;
 using OptixMovies.Modules.Movies.Records;
-using OptixMovies.Modules.Movies.Services.Genre;
 using OptixMovies.Modules.Movies.Services.Movies;
 
 namespace OptixMovies.API.Endpoints.V1.Movies.Get;
@@ -18,18 +17,15 @@ public class GetMoviesEndpoint : Endpoint<GetMoviesEndpointRequest, GetMoviesEnd
     #region Fields
     private readonly ILogger<GetMoviesEndpoint> _logger;
     private readonly IMovieService _movieService;
-    private readonly IGenreService _genreService;
     #endregion
 
     #region Constructor
     public GetMoviesEndpoint(
         ILogger<GetMoviesEndpoint> logger,
-        IMovieService movieService,
-        IGenreService genreService)
+        IMovieService movieService)
     {
         _logger = logger;
         _movieService = movieService;
-        _genreService = genreService;
     }
     #endregion
 
@@ -100,14 +96,6 @@ public class GetMoviesEndpoint : Endpoint<GetMoviesEndpointRequest, GetMoviesEnd
     #region Private Methods
     private async Task<MovieDto> MapMovieToMovieDto(Movie movie, CancellationToken cancellationToken)
     {
-        List<string> genres = new List<string>();
-
-        foreach (var genre in movie.Genres)
-        {
-            genres.Add(
-                await _genreService.MapIdtoNameAsync(genre, cancellationToken));
-        }
-
         return new MovieDto()
         {
             Id = movie.Id,
@@ -121,7 +109,7 @@ public class GetMoviesEndpoint : Endpoint<GetMoviesEndpointRequest, GetMoviesEnd
                 AverageScore = movie.Rating.AverageScore,
                 VoteCount = movie.Rating.VoteCount
             },
-            Genres = genres,
+            Genres = movie.Genres,
             PosterUrl = movie.PosterURL,
         };
     }

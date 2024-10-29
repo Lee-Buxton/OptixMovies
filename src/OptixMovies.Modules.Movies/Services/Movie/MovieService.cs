@@ -60,6 +60,11 @@ public class MovieService : IMovieService
         return await _cosmos.CreateItemAsync(movie, cancellationToken);
     }
 
+    public async Task BulkCreateMovieAsync(List<Movie> movies, CancellationToken cancellationToken)
+    {
+        await _cosmos.CreateBulkItemAsync(movies, cancellationToken);
+    }
+
     public async Task<Movie> UpdateMovieAsync(Movie movie, CancellationToken cancellationToken)
     {
         return await _cosmos.UpdateItemAsync(movie, cancellationToken);

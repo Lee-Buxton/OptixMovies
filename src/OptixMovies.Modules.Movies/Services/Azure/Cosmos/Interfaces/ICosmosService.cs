@@ -8,4 +8,5 @@ public interface ICosmosService<T>
     Task<T> UpdateItemAsync(T item, CancellationToken cancellationToken, string containerName = null);
     Task DeleteItemAsync(string id, CancellationToken cancellationToken, string containerName = null);
     Task<int> GetCountAsync(string sqlWhere, CancellationToken cancellationToken, string containerName = null);
+    Task CreateBulkItemAsync(List<T> items, CancellationToken cancellationToken, string containerName = null);
 }
