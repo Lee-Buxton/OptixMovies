@@ -17,7 +17,6 @@ public static class ModuleExtensions
             .Configure(configureOptions);
 
         services.AddSingleton<ICosmosService<Movie>, CosmosService<Movie>>();
-        services.AddSingleton<ICosmosService<MovieGenre>, CosmosService<MovieGenre>>();
         services.AddSingleton<IQueryService, QueryService>();
         services.AddSingleton<IMovieService, MovieService>();
         services.AddSingleton<IMovieImportService, MovieImportService>();

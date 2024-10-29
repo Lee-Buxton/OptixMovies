@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
-using OptixMovies.Modules.Movies.Services.Genre;
 using OptixMovies.Modules.Movies.Services.MovieImporter;
 using OptixMovies.Modules.Movies.Services.Movies;
 using System.Security.Cryptography.Xml;

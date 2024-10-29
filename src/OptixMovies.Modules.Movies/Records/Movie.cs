@@ -14,7 +14,7 @@ public record Movie : ICosmosItem
     public double TMDBPopularity { get; set; }
     public Rating Rating { get; set; }
     public string OriginalLanguage { get; set; }
-    public List<Guid> Genres { get; set; }
+    public List<string> Genres { get; set; }
     public string PosterURL { get; set; }
 
 }

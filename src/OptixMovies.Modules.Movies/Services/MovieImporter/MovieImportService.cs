@@ -2,7 +2,6 @@
 using CsvHelper.Configuration;
 using Microsoft.Extensions.Logging;
 using OptixMovies.Modules.Movies.Records;
-using OptixMovies.Modules.Movies.Services.Genre;
 using OptixMovies.Modules.Movies.Services.Movies;
 using System.Collections.Concurrent;
 using System.Globalization;
@@ -21,7 +20,6 @@ public class MovieImportService : IMovieImportService
     #endregion
 
     #region Fields
-    private readonly IGenreService _genreService;
     private readonly IMovieService _movieService;
     private readonly ILogger<MovieImportService> _logger;
 
@@ -30,11 +28,9 @@ public class MovieImportService : IMovieImportService
 
     #region Constructor
     public MovieImportService(
-        IGenreService genreService,
         IMovieService movieService,
         ILogger<MovieImportService> logger)
     {
-        _genreService = genreService;
         _movieService = movieService;
         _logger = logger;
     }
@@ -83,14 +79,8 @@ public class MovieImportService : IMovieImportService
                 AverageScore = movieImportFile.Vote_Average
             },
             PosterURL = movieImportFile.Poster_Url,
-            Genres = new List<Guid>()
+            Genres = movieImportFile.Genre.ToLower().Split(new string[] { "," }, StringSplitOptions.TrimEntries).ToList()
         };
-
-        foreach (var genre in movieImportFile.Genre.Split(new string[] {","}, StringSplitOptions.TrimEntries))
-        {
-            movie.Genres.Add(
-                await _genreService.FindOrCreateMovieGenreAsync(genre, cancellationToken));
-        }
 
         await _movieService.CreateMovieAsync(movie, cancellationToken);
 

@@ -2,13 +2,7 @@
 using Microsoft.Extensions.Options;
 using OptixMovies.Modules.Movies.Options;
 using OptixMovies.Modules.Movies.Records;
-using OptixMovies.Modules.Movies.Services.Genre;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace OptixMovies.Modules.Movies.Services.SqlQuery;
 
@@ -25,7 +19,6 @@ public class QueryService : IQueryService
 
     #region Fields
     private readonly ILogger _logger;
-    private readonly IGenreService _genreService;
     private readonly QueryOptions _options;
     private readonly Dictionary<string, string> _conditions;
 
@@ -35,11 +28,9 @@ public class QueryService : IQueryService
     #region Constructor
     public QueryService(
         ILogger<QueryService> logger,
-        IOptions<MoviesModuleOptions> options,
-        IGenreService genreService)
+        IOptions<MoviesModuleOptions> options)
     {
         _logger = logger;
-        _genreService = genreService;
         _options = options.Value.Query;
         _conditions = new Dictionary<string, string>
         {
@@ -147,10 +138,10 @@ public class QueryService : IQueryService
 
             if(match.Groups["field"].Value == "Genres")
             {
-                return string.Format("ARRAY_CONTAINS(c.{0}, \"{1}\", false)",
+                return string.Format("ARRAY_CONTAINS(c.{0}, {1}, false)",
                 match.Groups["field"].Value,
-                _genreService.MapNameToId(match.Groups["value"].Value.ToLower().Substring(1, (match.Groups["value"].Value.Length - 2)), new())
-            );
+                match.Groups["value"].Value.ToLower()
+                );
             }
 
             return string.Format("c.{0} {1} {2}",
