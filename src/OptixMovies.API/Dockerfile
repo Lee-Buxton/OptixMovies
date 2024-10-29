@@ -13,8 +13,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/OptixMovies.API/OptixMovies.API.csproj", "src/OptixMovies.API/"]
-COPY ["src/OptixMovies.Module.Movies/OptixMovies.Modules.Movies.csproj", "src/OptixMovies.Module.Movies/"]
+COPY ["src/OptixMovies.Modules.Movies/OptixMovies.Modules.Movies.csproj", "src/OptixMovies.Modules.Movies/"]
 RUN dotnet restore "./src/OptixMovies.API/OptixMovies.API.csproj"
+RUN dotnet dev-certs https --trust
 COPY . .
 WORKDIR "/src/src/OptixMovies.API"
 RUN dotnet build "./OptixMovies.API.csproj" -c $BUILD_CONFIGURATION -o /app/build

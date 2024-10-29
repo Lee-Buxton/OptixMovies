@@ -166,20 +166,26 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
     private Database InitializeCosmosService()
     {
 
-#if DEBUG
-        CosmosClientOptions options = new()
+        CosmosClient cosmosClient;
+
+        if (_options.IgnoreCertificate)
         {
-            HttpClientFactory = () => new HttpClient(new HttpClientHandler()
+            CosmosClientOptions options = new()
             {
-                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            }),
-            ConnectionMode = ConnectionMode.Gateway,
-        };
-        var cosmosClient = new CosmosClient(_options.Endpoint, _options.AuthKey, options);
-#else
-        var cosmosClient = new CosmosClient(_options.ConnectionString);
-        
-#endif
+                HttpClientFactory = () => new HttpClient(new HttpClientHandler()
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                }),
+                ConnectionMode = ConnectionMode.Gateway,
+            };
+
+            cosmosClient = new CosmosClient(_options.Endpoint, _options.AuthKey, options);
+        }
+        else
+        {
+            cosmosClient = new CosmosClient(_options.Endpoint, _options.AuthKey);
+        }
+
         Task<DatabaseResponse> response = cosmosClient.CreateDatabaseIfNotExistsAsync(_options.DatabaseName);
         response.Wait();
         return response.Result.Database;
@@ -201,7 +207,8 @@ public class CosmosService<T> : ICosmosService<T> where T : ICosmosItem
         try
         {
             var containerResponse = await _cosmos.CreateContainerIfNotExistsAsync(
-                GetContainerName(containerName), "/id", 1000);
+                GetContainerName(containerName), 
+                _options.PartitionKey);
 
             return containerResponse.Container;
         }

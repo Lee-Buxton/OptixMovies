@@ -26,9 +26,11 @@ namespace OptixMovies.API
                 {
                     o.Cosmos = new Modules.Movies.Options.CosmosOptions()
                     {
-                        DatabaseName = "Movies",
-                        Endpoint = "https://optixmovies.cosmos:8081",
-                        AuthKey = builder.Configuration["Cosmos:AuthKey"]
+                        DatabaseName = builder.Configuration["Cosmos:DatabaseName"],
+                        Endpoint = builder.Configuration["Cosmos:AccountEndpoint"],
+                        IgnoreCertificate = builder.Configuration.GetValue<bool>("Cosmos:IgnoreCertificate"),
+                        AuthKey = builder.Configuration["Cosmos:AuthKey"] ?? builder.Configuration["COSMOS_AUTHKEY"],
+                        PartitionKey = builder.Configuration["Cosmos:PartitionKey"]
                     };
                     o.Query = new Modules.Movies.Options.QueryOptions()
                     {
@@ -42,7 +44,7 @@ namespace OptixMovies.API
                         ]
                     };
                 });
-
+            
             var app = builder.Build();
             app.UseFastEndpoints(c =>
             {

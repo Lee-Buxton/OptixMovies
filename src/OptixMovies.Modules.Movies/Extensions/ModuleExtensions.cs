@@ -3,7 +3,6 @@ using OptixMovies.Modules.Movies.Options;
 using OptixMovies.Modules.Movies.Records;
 using OptixMovies.Modules.Movies.Services.Azure.Cosmos;
 using OptixMovies.Modules.Movies.Services.Azure.Cosmos.Interfaces;
-using OptixMovies.Modules.Movies.Services.Genre;
 using OptixMovies.Modules.Movies.Services.MovieImporter;
 using OptixMovies.Modules.Movies.Services.Movies;
 using OptixMovies.Modules.Movies.Services.SqlQuery;
@@ -21,7 +20,6 @@ public static class ModuleExtensions
         services.AddSingleton<ICosmosService<MovieGenre>, CosmosService<MovieGenre>>();
         services.AddSingleton<IQueryService, QueryService>();
         services.AddSingleton<IMovieService, MovieService>();
-        services.AddSingleton<IGenreService, GenreService>();
         services.AddSingleton<IMovieImportService, MovieImportService>();
 
         return services;

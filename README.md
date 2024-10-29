@@ -20,30 +20,52 @@ If I wanted to achieve that I would have needed to setup a connection to TMDB or
 
 ## How to run
 
-Running this project is fairly simple: 
+``
 
-- Open the project in Visual Studio.
-- - If you have docker installed and running, the docker compose should be run automatically. If the containers don't start automatically, then make sure the startup item is set to "docker-compose" and run in debug.
-- - The application should run, though will fail if you try any of the endpoints since Cosmos DB isn't configured. 
-- Open the Cosmos Emulator
-- - Emulator is located at https://localhost:8081/_explorer/index.html
-- - Copy the Primary Key.
-- Add the Key to user secrets. 
-- - Right click OptixMovies.API in the solution explorer and click Manage User Secrets.
-- - Create a Cosmos node, then an AuthKey value. You can also just copy and paste the below example, and fill in the primary key. Keep in mind you may already have some value in the user secrets already, which you may want to keep.
+To run this application you will require the Cosmos DB Emulator, or alternatively you can setup a Cosmos Instance with an Azure Account.
+https://aka.ms/cosmosdb-emulator
 
-`{
-    Cosmos: {
-        "AuthKey": "<Primary Key Here>"
-    }
-}`
+#### Emulator
+Once the Cosmos Emulator is running navigate to the data explorer. And retrieve the primary key. 
+https://localhost:8081/_explorer/index.html
 
-- Run the application
-- - Press F5 to run the application again. Making sure that the startup item is docker-compose.
-- Import the database.
-- - Within the root of the repo, there is a data folder. Inside that folder there are two file, if you have some time to spare you can load the mymoviesdb.csv file. This may take 7-10 minutes.
-- - Alternatively you can use mymoviedb-slim.csv which has a subset of the main data. Though this should take less than 30 seconds to load.
-- Your Done. 
+The Emulators certificate should have automatically installed into your cert store, if you do run into any issues, you can disable the certificate validation in the appsetting.json, by change the IgnoreCertificate to true.
+
+#### Azure
+
+Create a resource Group
+`az group create --name OptixMovies --location northeurope`
+
+Create the Cosmos DB Instance
+`az cosmosdb create --name optix-movies-db --resource-group OptixMovies --kind GlobalDocumentDB --locations regionName="North Europe" failoverPriority=0 isZoneRedundant=False --capabilities EnableServerless`
+
+Get the Primary Key for the instance.
+`az cosmosdb keys list --name optix-movies-db --resource-group OptixMovies --query "primaryMasterKey" --output tsv`
+
+Update the appsettings.json with the account endpoint for your cosmos instance.
+`"AccountEndpoint": "https://optix-movies-db.documents.azure.com:443/"`
+
+Note: change "optix-movies-db" to the name of the DB you set, if the above commands work, the name will be optix-movies-db, though if it's reported as taken you will need to adjust the name to something else.
+
+#### User Secret
+
+Add the Cosmos Primary Key to the projects user secrets.
+`dotnet user-secrets set "Cosmos:AuthKey" "Primary Key Here" --project .\src\OptixMovies.API`
+
+#### Run the application
+
+Finally run the application.
+`dotnet run`
+
+### Production
+
+If you wanted to use in production, the manual method would be as follow. This will only work if you setup the project to use an Azure Cosmos instance and not the Cosmos emulator.
+
+`docker build -f .\src\OptixMovies.API\Dockerfile -t optixmovies.api .`
+
+`docker run -e COSMOS_AUTHKEY={Replace with Primary Key for Cosmos} -p 60123:8080 optixmovies.api:latest`
+
+If you run this locally you will be able to access it on http://localhost:60123/swagger.
 
 ## Data
 
@@ -69,9 +91,6 @@ The following endpoints exist within the project, you can also access these via 
 
 /v1/movies/import
 - PUT - Used to import the DB.
-
-/v1/movies/genres
-- GET - Used to get a list of Movie Genres. 
 
 More details can be found in the swagger documentation, located at /swagger/index.html on the API project (https://localhost:60514/swagger/index.html).
 
@@ -119,6 +138,17 @@ Note: Filters are case-sensitive.
 - ' ' (Space)
 - ' (Apostrophe)
 - : (Colon)
+
+### Order By
+The order by is fairly straight forward and only supports two values:
+- ASC (Ascending)
+- DESC (Descending)
+
+The format is as follows.
+`<Field>(space)<ASC or DESC>`
+
+example
+`ReleaseDate DESC`
 
 ## Projects
 
