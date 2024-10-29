@@ -23,6 +23,7 @@ public class QueryService : IQueryService
     private readonly Dictionary<string, string> _conditions;
 
     private const string _filterRegex = @"^(?<field>[a-z\.]*)\s(?<condition>eq|lt|gt|ge|le|ne)\s(?<value>[a-z0-9\s\+\'\-\.\(\)|\:]*)$";
+    private const string _orderByRegex = @"(?<field>[a-z\.]*)\s(?<direction>asc|desc)";
     #endregion
 
     #region Constructor
@@ -112,6 +113,22 @@ public class QueryService : IQueryService
 
     public bool ValidateOrderBy(string orderBy)
     {
+        if (string.IsNullOrEmpty(orderBy))
+            return true;
+
+        string[] filters = orderBy.Split(",");
+
+        foreach (string item in filters)
+        {
+            Match match = Regex.Match(orderBy, _orderByRegex, RegexOptions.IgnoreCase);
+
+            if (!match.Success)
+                return false;
+
+            if (!_options.AllowedFields.Contains(match.Groups["field"].Value))
+                return false;
+        }
+
         return true;
     }
     #endregion
@@ -182,7 +199,7 @@ public class QueryService : IQueryService
 
     private string ProcessOrderBy(string orderBy)
     {
-        Match match = Regex.Match(orderBy, @"(?<field>[a-z\.]*)\s(?<direction>asc|desc)", RegexOptions.IgnoreCase);
+        Match match = Regex.Match(orderBy, _orderByRegex, RegexOptions.IgnoreCase);
 
         if (match.Success)
         {
