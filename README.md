@@ -48,12 +48,12 @@ Note: change "optix-movies-db" to the name of the DB you set, if the above comma
 #### User Secret
 
 Add the Cosmos Primary Key to the projects user secrets.  
-`dotnet user-secrets set "Cosmos:AuthKey" "Primary Key Here" --project .\src\OptixMovies.API`
+`dotnet user-secrets set "Cosmos:AuthKey" "{Primary Key Here}" --project .\src\OptixMovies.API`
 
 #### Run the application
 
-Finally run the application.
-`dotnet run`
+Finally run the application.  
+`dotnet run --project .\src\OptixMovies.API\`
 
 ### Production
 
@@ -69,11 +69,11 @@ If you run this locally you will be able to access it on http://localhost:60123/
 
 The data directory contains the following two files: 
 
-Full Movies DB - Around 10k Movies
-data/MoviesDB/mymoviedb.csv
+Full Movies DB - Around 10k Movies  
+`data\MoviesDB\mymoviedb.csv`
 
-Slim Movies DB - Around 500 Movies
-data/MoviesDB/mymoviedb-slim.csv
+Slim Movies DB - Around 500 Movies  
+`data\MoviesDB\mymoviedb-slim.csv`
 
 Smaller dataset was put together for efficency of time, as the larger one can take a little itme to import, usually less than a minute. 
 
@@ -90,13 +90,17 @@ The following endpoints exist within the project, you can also access these via 
 /v1/movies/import
 - PUT - Used to import the DB.
 
-More details can be found in the swagger documentation, located at /swagger/index.html on the API project (https://localhost:60514/swagger/index.html).
+More details can be found in the swagger documentation, located at /swagger/index.html on the API project (https://localhost:7099/swagger/index.html).
+
+In addition, there is a Postman collectiong in the following location. 
+
+`data\Postman`
 
 ## Query Syntax
 
 Querying is fairly straight forward, here are an example: 
 
-/v1/movies?filter="genre eq 'action',releaseDate ge 2024-06-01"&orderBy="releaseDate DESC"&top=10&skip=0
+`/v1/movies?filter=genre eq 'action',releaseDate ge 2024-06-01&orderBy=releaseDate DESC&top=10&skip=0`
 
 ### Filter
 You can have multiple filters, though they are AND'd together. Each filter is seperated by a comma. Each filter uses the following format. 
