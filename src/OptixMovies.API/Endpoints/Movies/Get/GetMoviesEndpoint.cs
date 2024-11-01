@@ -50,7 +50,7 @@ public class GetMoviesEndpoint : Endpoint<GetMoviesEndpointRequest, GetMoviesEnd
             Movies = movies.Movies,
 
             PageSize = req.PageSize.HasValue ? req.PageSize.Value : 20,
-            PageNumber = req.PageNumber.HasValue ? req.PageNumber.Value : 0,            
+            PageNumber = req.PageNumber.HasValue ? req.PageNumber.Value : 0,
             TotalResults = movies.TotalResults,
         }, 200, ct);
     }

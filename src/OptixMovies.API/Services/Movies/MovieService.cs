@@ -10,15 +10,6 @@ namespace OptixMovies.API.Services.Movies;
 
 public class MovieService : IMovieService
 {
-
-    #region Public Properties
-
-    #endregion
-
-    #region Private Properties
-
-    #endregion
-
     #region Fields
     private const string _dateTimeFormat = "yyyy-MM-dd HH:mm";
 
@@ -82,10 +73,6 @@ public class MovieService : IMovieService
         return (Movies: movies.Skip(skip).Take(take).ToList(), TotalResults: totalResults);
 
     }
-    #endregion
-
-    #region Override Methods
-
     #endregion
 
     #region Private Methods
