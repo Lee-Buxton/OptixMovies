@@ -48,35 +48,41 @@ You can search the title of any movie. Supports partial matching.
 example   
 `title=man` - Returns movies like Batman, spiderman, superman, etc
 
+
 #### Genres - Array\<string\>
 You can search on movie genres. This supports multiple values comma seperated. 
 
 Examples   
-`genres=action` - Single Genre
+`genres=action` - Single Genre  
 `genres=action&genres=fantasy` - Multiple Genres. 
+
 
 #### OrderByReleaseDate - bool
 Order any results by the release date. By default this is in Ascending order. 
 
-Examples  
-`orderbyReleaseDate=true` - Order By Release Date Ascending
+Examples   
+`orderbyReleaseDate=true` - Order By Release Date Ascending  
 `orderbyReleaseDate=true&orderByDescending=true` - Order By Release Date Descending
+
 
 #### OrderByTitle - bool
 Order any results by the title. By default this is in Ascending order. 
 
 Examples   
-`orderByTitlee=true` - Order By Release Date Ascending
+`orderByTitlee=true` - Order By Release Date Ascending  
 `orderByTitle=true&orderByDescending=true` - Order By Release Date Descending
+
 
 #### OrderByDirectionDescending - bool
 Changed the order by direction from ascending to descending. Example can be seen in the OrderByTitle and OrderByReleaseDate parameters mentioned above.
+
 
 #### PageSize - int
 Defines the page size of the results. Default value is 20
 
 Example   
 `pageSize=50` - Sets the page size to 50. 
+
 
 #### PageNumber - int
 Defines the page of results to load. Default value is 0
@@ -86,6 +92,7 @@ Example
 
 
 Details can be found in the swagger documentation, located at /swagger/index.html on the API project.
+
 
 ### Order By
 The order by is fairly straight forward and only supports two values:
