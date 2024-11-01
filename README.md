@@ -19,127 +19,73 @@ The project can do all except "As a user I want to filter movies by actors" as t
 If I wanted to achieve that I would have needed to setup a connection to TMDB or IMDB to get the actor information direct from their API.
 
 ## How to run
+Run the following command to start the application. Alternatively open the application in Visual Stuido and press F5. 
 
-To run this application you will require the Cosmos DB Emulator, or alternatively you can setup a Cosmos Instance with an Azure Account.
-https://aka.ms/cosmosdb-emulator
-
-#### Emulator
-Once the Cosmos Emulator is running navigate to the data explorer. And retrieve the primary key. 
-https://localhost:8081/_explorer/index.html
-
-The Emulators certificate should have automatically installed into your cert store, if you do run into any issues, you can disable the certificate validation in the appsetting.json, by change the IgnoreCertificate to true.
-
-#### Azure
-
-Create a resource Group  
-`az group create --name OptixMovies --location northeurope`
-
-Create the Cosmos DB Instance  
-`az cosmosdb create --name optix-movies-db --resource-group OptixMovies --kind GlobalDocumentDB --locations regionName="North Europe" failoverPriority=0 isZoneRedundant=False --capabilities EnableServerless`
-
-Get the Primary Key for the instance.  
-`az cosmosdb keys list --name optix-movies-db --resource-group OptixMovies --query "primaryMasterKey" --output tsv`
-
-Update the appsettings.json with the account endpoint for your cosmos instance.  
-`"AccountEndpoint": "https://optix-movies-db.documents.azure.com:443/"`
-
-Note: change "optix-movies-db" to the name of the DB you set, if the above commands work, the name will be optix-movies-db, though if it's reported as taken you will need to adjust the name to something else.
-
-#### User Secret
-
-Add the Cosmos Primary Key to the projects user secrets.  
-`dotnet user-secrets set "Cosmos:AuthKey" "{Primary Key Here}" --project .\src\OptixMovies.API`
-
-#### Run the application
-
-Finally run the application.  
 `dotnet run --project .\src\OptixMovies.API\`
 
 ### Production
 
 If you wanted to use in production, the manual method would be as follow. This will only work if you setup the project to use an Azure Cosmos instance and not the Cosmos emulator.
 
-`docker build -f .\src\OptixMovies.API\Dockerfile -t optixmovies.api .`
+`docker build -f .\src\OptixMovies.API\Dockerfile -t optixmovies.api:latest .`
 
-`docker run -e COSMOS_AUTHKEY={Replace with Primary Key for Cosmos} -p 60123:8080 optixmovies.api:latest`
+`docker run -p 60123:8080 optixmovies.api:latest`
 
 If you run this locally you will be able to access it on http://localhost:60123/swagger.
-
-## Data
-
-The data directory contains the following two files: 
-
-Full Movies DB - Around 10k Movies  
-`data\MoviesDB\mymoviedb.csv`
-
-Slim Movies DB - Around 500 Movies  
-`data\MoviesDB\mymoviedb-slim.csv`
-
-Smaller dataset was put together for efficency of time, as the larger one can take a little itme to import, usually less than a minute. 
 
 ## Endpoints
 
 The following endpoints exist within the project, you can also access these via the Swagger interface.
 
-/v1/movies/
+/movies   
 - GET - Used to get a list of all movies. Supports querying.
 
-/v1/movies/{id}
-- GET - Used to retrieve a single movie.
+### Query String Parameters
 
-/v1/movies/import
-- PUT - Used to import the DB.
+#### Title - String
+You can search the title of any movie. Supports partial matching.
 
-More details can be found in the swagger documentation, located at /swagger/index.html on the API project (https://localhost:7099/swagger/index.html).
+example   
+`title=man` - Returns movies like Batman, spiderman, superman, etc
 
-In addition, there is a Postman collectiong in the following location. 
+#### Genres - Array\<string\>
+You can search on movie genres. This supports multiple values comma seperated. 
 
-`data\Postman`
+Examples   
+`genres=action` - Single Genre
+`genres=action&genres=fantasy` - Multiple Genres. 
 
-## Query Syntax
+#### OrderByReleaseDate - bool
+Order any results by the release date. By default this is in Ascending order. 
 
-Querying is fairly straight forward, here are an example: 
+Examples  
+`orderbyReleaseDate=true` - Order By Release Date Ascending
+`orderbyReleaseDate=true&orderByDescending=true` - Order By Release Date Descending
 
-`/v1/movies?filter=genre eq 'action',releaseDate ge 2024-06-01&orderBy=releaseDate DESC&top=10&skip=0`
+#### OrderByTitle - bool
+Order any results by the title. By default this is in Ascending order. 
 
-### Filter
-You can have multiple filters, though they are AND'd together. Each filter is seperated by a comma. Each filter uses the following format. 
+Examples   
+`orderByTitlee=true` - Order By Release Date Ascending
+`orderByTitle=true&orderByDescending=true` - Order By Release Date Descending
 
-`<Field>(space)<Operator>(space)<Value>`
+#### OrderByDirectionDescending - bool
+Changed the order by direction from ascending to descending. Example can be seen in the OrderByTitle and OrderByReleaseDate parameters mentioned above.
 
-For the value, if it's a string then it should be surrounded by single quotes. If it's a number those quotes are not needed.
+#### PageSize - int
+Defines the page size of the results. Default value is 20
 
-#### Available Fields
-Note: Filters are case-sensitive.
+Example   
+`pageSize=50` - Sets the page size to 50. 
 
-- ReleaseDate
-- Genre
-- Title
-- OriginalLanguage
-- Rating.AverageScore
-- Rating.VoteCount
+#### PageNumber - int
+Defines the page of results to load. Default value is 0
 
-#### Operators
+Example   
+`pageNumber=5` - Sets the page number to 5. 
 
-- eq (Equals)
-- lt (Less Than)
-- gt (Greater Than)
-- ge (Greater Than or Equal to)
-- le (Less Than or Equal to)
-- ne (Not Equal)
 
-#### Supported Characters for Value
-
-- A-Z (A to Z, both upper and lower case.)
-- 0-9 (Zero to Nine)
-- \+ (Plus)
-- \- (Hyphen)
-- . (Full Stop)
-- () (Left and Right parenthesis)
-- | (Pipe)
-- ' ' (Space)
-- ' (Apostrophe)
-- : (Colon)
+Details can be found in the swagger documentation, located at /swagger/index.html on the API project.
 
 ### Order By
 The order by is fairly straight forward and only supports two values:
@@ -151,30 +97,3 @@ The format is as follows.
 
 example
 `ReleaseDate DESC`
-
-## Projects
-
-The project consists of the following two parts: 
-
-API Project - OptixMovies.API  
-This represents the presentation layer in clean architecture. I have kept the core application logic within the module project. Only the API endpoints and the logic need to serve those are included in this project.
-
-Movie Module - OptixMovies.Modules.Movies  
-This represents a couple layers of the clean architecture. Due to simplicity I have merged the core/domain, application, infrastructure and presistence within a single project. Though it would be easy to split out the code into seperate class libraries.
-The Module name, comes from the overall architecture being modular monolith, though it would be fairly easy to change it to a microservice.
-
-If I was to implement clean architecture more explicitly the project could look like the following.
-
-Presentation
- - OptixMovies.API
-
-Application
- - OptixMovies.Modules.Movies
-
-Infrastructure / Persistence
- - OptixMovies.Infra.Azure  
-   I would group all azure items into one library, though you could seperate them further based on individual product.
-
-Domain / Core
- - OptixMovies.Domain  
-   The name can easily be changed, I'm partial to using common or core over domain. 
