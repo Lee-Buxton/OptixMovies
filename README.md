@@ -92,15 +92,3 @@ Example
 
 
 Details can be found in the swagger documentation, located at /swagger/index.html on the API project.
-
-
-### Order By
-The order by is fairly straight forward and only supports two values:
-- ASC (Ascending)
-- DESC (Descending)
-
-The format is as follows.
-`<Field>(space)<ASC or DESC>`
-
-example
-`ReleaseDate DESC`
